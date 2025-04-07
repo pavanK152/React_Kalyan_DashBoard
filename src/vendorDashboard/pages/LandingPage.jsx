@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import SideBar from "../components/sideBar";
+import SideBar from "../components/SideBar";
 import Login from "../components/forms/Login";
 import Register from "../components/forms/Register";
 import AddFirm from "../components/forms/AddFirm";
