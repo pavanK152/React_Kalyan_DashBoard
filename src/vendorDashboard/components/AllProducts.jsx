@@ -22,6 +22,10 @@ const AllProducts = () => {
   }, []);
 
   const deleteProductById = async (productId) => {
+    const deletedProduct = products.find(
+      (product) => product._id === productId
+    );
+
     try {
       const response = await fetch(`${API_URL}/product/${productId}`, {
         method: "DELETE",
@@ -33,7 +37,8 @@ const AllProducts = () => {
       }
     } catch (error) {
       console.error("Failed to delete product");
-      alert("Failed to delete");
+      alert(`${error}`);
+      //alert("Failed to delete");
     }
   };
   return (

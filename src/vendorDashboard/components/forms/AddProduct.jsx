@@ -30,14 +30,13 @@ const AddProduct = () => {
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
+
     try {
       const loginToken = localStorage.getItem("loginToken");
       const firmId = localStorage.getItem("firmId");
 
       if (!loginToken || !firmId) {
         console.error("User not authenticated");
-        alert("User not authenticated. Please log in.");
-        return;
       }
 
       const formData = new FormData();
@@ -67,7 +66,6 @@ const AddProduct = () => {
       setImage(null);
       setDescription("");
     } catch (error) {
-      console.error("Error adding product:", error);
       alert("Failed to add Product");
     }
   };

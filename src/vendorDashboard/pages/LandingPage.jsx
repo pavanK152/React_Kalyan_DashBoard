@@ -21,6 +21,7 @@ const LandingPage = () => {
     const loginToken = localStorage.getItem("loginToken");
     if (loginToken) {
       setShowLogOut(true);
+      setShowWelcome(true);
     }
   }, []);
 
@@ -37,7 +38,8 @@ const LandingPage = () => {
     localStorage.removeItem("firmId");
     localStorage.removeItem("firmName");
     setShowLogOut(false);
-    setShowFirmTitle(true);
+    setShowFirmTitle(false);
+    setShowWelcome(false);
   };
   const showLoginHandler = () => {
     setShowLogin(true);
@@ -120,12 +122,12 @@ const LandingPage = () => {
             showAllProductsHandler={showAllProductsHandler}
             showFirmTitle={showFirmTitle}
           />
-          {showLogin && <Login showWelcomeHandler={showWelcomeHandler} />}
-          {showRegister && <Register showLoginHandler={showLoginHandler} />}
           {showFirm && showLogOut && <AddFirm />}
           {showProduct && showLogOut && <AddProduct />}
           {showWelcome && <Welcome />}
           {showAllProducts && showLogOut && <AllProducts />}
+          {showLogin && <Login showWelcomeHandler={showWelcomeHandler} />}
+          {showRegister && <Register showLoginHandler={showLoginHandler} />}
         </div>
       </section>
     </>

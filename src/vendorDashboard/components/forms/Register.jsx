@@ -27,6 +27,12 @@ const Register = ({ showLoginHandler }) => {
         setPassword("");
         alert("vendor registered successfully");
         showLoginHandler();
+      } else {
+        if (data === "Email already taken") {
+          alert("Email already exists. Please use a different email.");
+        } else {
+          alert("Registration Failed");
+        }
       }
     } catch (error) {
       console.error("registration failed", error);

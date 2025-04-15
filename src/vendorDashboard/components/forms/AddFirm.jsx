@@ -32,6 +32,7 @@ const AddFirm = () => {
   };
   const handleFirmSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const loginToken = localStorage.getItem("loginToken");
       if (!loginToken) {
@@ -60,6 +61,7 @@ const AddFirm = () => {
         body: formData,
       });
       const data = await response.json();
+      console.log("🔥 Full Response Data:", data);
       if (response.ok) {
         console.log(data);
         setFirmName("");
@@ -69,17 +71,27 @@ const AddFirm = () => {
         setOffer("");
         setFile(null);
         alert("Firm added Successfully");
+        const firmId = data.firmId;
+        localStorage.setItem("firmId", firmId);
       } else if (data.message === "vendor can have only one firm") {
         alert("Firm Exists. Only 1 firm can be added");
       } else {
         alert("Failed to add firm");
       }
-      console.log("this is firmId", data.firmId);
-      const mango = data.firmId;
+      /* console.log("this is firmId", data.firmId);
+      const firm = data.vendor.firm[0];
+      const firmId = firm._id;
+      const firmName = firm.firmName; 
 
-      localStorage.setItem("firmId", mango);
+      localStorage.setItem("firmId", firmId); */
+
+      localStorage.setItem("firmName", firmName);
+
+      window.location.reload();
     } catch (error) {
-      console.error("Failed to add firm");
+      console.error("failed to add Firm");
+
+      alert(`${error}`);
     }
   };
 
