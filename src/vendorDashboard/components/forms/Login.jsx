@@ -7,6 +7,7 @@ const Login = ({ showWelcomeHandler }) => {
 
   const loginHandler = async (e) => {
     e.preventDefault();
+
     try {
       const response = await fetch(`${API_URL}/vendor/login`, {
         method: "POST",
@@ -18,28 +19,51 @@ const Login = ({ showWelcomeHandler }) => {
 
       const data = await response.json();
 
-      if (response.ok) {
-        alert("Login success");
-        setEmail("");
-        setPassword("");
-        localStorage.setItem("loginToken", data.token);
-        showWelcomeHandler();
+      // ❌ STOP if login failed
+      if (!response.ok) {
+        alert(data.error || "Login failed");
+        return;
       }
+
+      // ✅ Login success
+      alert("Login success");
+
+      setEmail("");
+      setPassword("");
+
+      // 🔑 SAVE TOKEN & VENDOR ID
+      localStorage.setItem("loginToken", data.token);
+      localStorage.setItem("vendorId", data.vendorId);
+
       const vendorId = data.vendorId;
-      console.log("checking for VendorId:", vendorId);
+      console.log("VendorId:", vendorId);
+
+      // 🔒 SAFETY CHECK
+      if (!vendorId) {
+        console.error("VendorId missing after login");
+        return;
+      }
+
+      // ✅ Fetch vendor details
       const vendorResponse = await fetch(
-        `${API_URL}/vendor/single-vendor/${vendorId}`
+        `${API_URL}/vendor/single-vendor/${vendorId}`,
       );
-      window.location.reload();
+
       const vendorData = await vendorResponse.json();
+
       if (vendorResponse.ok) {
         const vendorFirmId = vendorData.vendorFirmId;
-        const vendorFirmName = vendorData.vendor.firm[0].firmName;
-        localStorage.setItem("firmId", vendorFirmId);
-        localStorage.setItem("firmName", vendorFirmName);
+
+        if (vendorFirmId) {
+          localStorage.setItem("firmId", vendorFirmId);
+          localStorage.setItem("firmName", vendorData.vendor.firm[0].firmName);
+        }
       }
+
+      // ✅ Move to dashboard / welcome screen
+      showWelcomeHandler();
     } catch (error) {
-      console.error(error);
+      console.error("Login error:", error);
     }
   };
 
