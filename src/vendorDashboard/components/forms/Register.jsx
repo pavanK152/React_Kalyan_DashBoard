@@ -10,6 +10,10 @@ const Register = ({ showLoginHandler }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return; // 👈 prevent double submit
+    setLoading(true);
+
     try {
       const response = await fetch(`${API_URL}/vendor/register`, {
         method: "POST",
@@ -20,23 +24,25 @@ const Register = ({ showLoginHandler }) => {
       });
 
       const data = await response.json();
-      if (response.ok) {
-        console.log(data);
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        alert("vendor registered successfully");
-        showLoginHandler();
-      } else {
-        if (data === "Email already taken") {
-          alert("Email already exists. Please use a different email.");
-        } else {
-          alert("Registration Failed");
-        }
+
+      if (!response.ok) {
+        alert(data.message || "Registration failed");
+        setLoading(false);
+        return;
       }
+
+      alert("Vendor registered successfully");
+
+      setUsername("");
+      setEmail("");
+      setPassword("");
+
+      setLoading(false);
+      showLoginHandler(); // 👈 switch AFTER success
     } catch (error) {
       console.error("registration failed", error);
       alert("Registration failed");
+      setLoading(false);
     }
   };
 
@@ -72,7 +78,9 @@ const Register = ({ showLoginHandler }) => {
         />
         <br />
         <div className="btnSubmit">
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Submitting..." : "Submit"}
+          </button>
         </div>
       </form>
     </div>
