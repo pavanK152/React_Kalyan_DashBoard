@@ -34,9 +34,10 @@ const AddFirm = () => {
     e.preventDefault();
 
     try {
-      const loginToken = localStorage.getItem("loginToken");
-      if (!loginToken) {
-        console.error("User Not Authenticated");
+      const token = localStorage.getItem("loginToken");
+      if (!token) {
+        alert("User Not Authenticated");
+        return;
       }
 
       const formData = new FormData();
@@ -56,42 +57,33 @@ const AddFirm = () => {
       const response = await fetch(`${API_URL}/firm/add-firm`, {
         method: "POST",
         headers: {
-          token: `${loginToken}`,
+          token: token, // ✅ send token only
         },
-        body: formData,
+        body: formData, // ✅ send FormData directly
       });
+
       const data = await response.json();
-      console.log("🔥 Full Response Data:", data);
+
       if (response.ok) {
-        console.log(data);
+        alert("Firm added Successfully");
+
         setFirmName("");
         setArea("");
         setCategory([]);
         setRegion([]);
         setOffer("");
         setFile(null);
-        alert("Firm added Successfully");
-        const firmId = data.firmId;
-        localStorage.setItem("firmId", firmId);
+
+        localStorage.setItem("firmId", data.firmId);
+        localStorage.setItem("firmName", firmName);
       } else if (data.message === "vendor can have only one firm") {
         alert("Firm Exists. Only 1 firm can be added");
       } else {
         alert("Failed to add firm");
       }
-      /* console.log("this is firmId", data.firmId);
-      const firm = data.vendor.firm[0];
-      const firmId = firm._id;
-      const firmName = firm.firmName; 
-
-      localStorage.setItem("firmId", firmId); */
-
-      localStorage.setItem("firmName", firmName);
-
-      window.location.reload();
     } catch (error) {
-      console.error("failed to add Firm");
-
-      alert(`${error}`);
+      console.error("Failed to add firm:", error);
+      alert("Failed to add firm");
     }
   };
 
