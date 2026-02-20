@@ -32,6 +32,7 @@ const AddFirm = () => {
   };
   const handleFirmSubmit = async (e) => {
     e.preventDefault();
+    console.log("API URL 👉", API_URL);
 
     try {
       const token = localStorage.getItem("loginToken");
@@ -53,13 +54,16 @@ const AddFirm = () => {
       region.forEach((value) => {
         formData.append("region", value);
       });
+      const vendorId = localStorage.getItem("vendorId");
+
+      formData.append("vendorId", vendorId);
 
       const response = await fetch(`${API_URL}/firm/add-firm`, {
         method: "POST",
         headers: {
-          token: token, // ✅ send token only
+          Authorization: `Bearer ${token}`,
         },
-        body: formData, // ✅ send FormData directly
+        body: formData,
       });
 
       const data = await response.json();
